@@ -3,9 +3,9 @@ sudo: required
 services:
   - docker
 before_install:
-  - docker build -t shiva/Fibonacci-react -f ./client/Dockerfile.dev ./client
+  - docker build -t shiva/fibonacci-react -f ./client/Dockerfile.dev ./client
 scripts:
-  - docker run -e CI=true shiva/Fibonacci-react npm run test
+  - docker run -e CI=true shiva/fibonacci-react npm run test
   # production build
 after_success:
   - docker build -t shiva/multi-client ./client
