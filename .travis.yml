@@ -1,0 +1,22 @@
+language: generic
+sudo: required
+services:
+  - docker
+before_install:
+  - docker build -t shiva/reactFibonacci -f ./client/Dockerfile.dev ./client
+scripts:
+  - docker run -e CI=true shiva/reactFibonacci npm run test
+  # production build
+after_success:
+  - docker build -t shiva/multi-client ./client
+  - docker build -t shiva/multi-nginx ./nginx
+  - docker build -t shiva/multi-server ./server
+  - docker build -t shiva/multi-worker ./worker  
+  # Login into docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password_stdin
+  # Take those images and push them into docker hub
+  - docker push shiva/multi-client
+  - docker push shiva/multi-nginx
+  - docker push shiva/multi-server
+  - docker push shiva/multi-worker
+  
